@@ -23,25 +23,6 @@ app.get('/', (req, res) => {
     res.send('ShopVerse API is running...');
 });
 
-// Temporary diagnostic route -- remove once the products data issue is resolved.
-app.get('/api/debug', async (req, res) => {
-    try {
-        const mongoose = require('mongoose');
-        const Product = require('./models/Product');
-        const productCount = await Product.countDocuments();
-        const collections = await mongoose.connection.db.listCollections().toArray();
-        res.json({
-            connectedDbName: mongoose.connection.name,
-            connectedHost: mongoose.connection.host,
-            readyState: mongoose.connection.readyState,
-            productCount,
-            collections: collections.map((c) => c.name)
-        });
-    } catch (error) {
-        res.status(500).json({ message: error.message, stack: error.stack });
-    }
-});
-
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/products', require('./routes/productRoutes'));
 app.use('/api/orders', require('./routes/orderRoutes'));
